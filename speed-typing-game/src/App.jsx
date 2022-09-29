@@ -1,51 +1,57 @@
-import { Component } from 'react'
-import { useState } from 'react'
-import './App.css'
+import React from 'react'
+import { useState, useEffect } from 'react'
+import './App'
 
-class  App extends Component {
-  constructor(props){
-    super(props)
-    this.state = {
-        value: "",
-        timer:"20sec"
-    }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
+function App(){
 
-  handleChange(event){
-    this.setState({
+  const [text, setText] = useState('')
+  const [timeRemaining, setTimeRemaining] = useState(5)
+  const [isTimeRunning, setIsTimeRunning] = useState(false)
+
+  
+
+  function handleChange(event){
+    setText({
       value: event.target.value
     })
   }
 
-  calculateWordCount(text){
+  function handleSubmit(event){
+    alert(state.value)
+    event.preventDefault()
+  }
+
+  function calculateWordCount(text){
     const wordsArr = text.trim().split('')
     console.log(wordsArr.length)
     return words(word => word !== "").length
   }
-  handleSubmit(event){
-    alert(this.state.value)
-    event.preventDefault()
-  }
 
-
-  render(){
+useEffect(() => {
+  if(isTimeRunning && timeRemaining === 0) {
+    setTimeout(()=> { 
+      setTimeRemaining(time => time -1)}, 1000)
+    } else if(timeRemaining === 0){
+      setIsTimeRunning(false)
+    }
+},[timeRemaining, isTimeRunning])
 
     return (
-      <form className="App" onSubmit={this.handleSubmit}>
+      <>
+      <form className="App" onSubmit={handleSubmit}>
               <h1>How fast do you type?</h1>
               <label>
-                <textarea value={this.state.value} onChange={this.handleChange}/>
+                <textarea value={text} onChange={handleChange}/>
               </label>
               <input type="submit" value="submit"/>
-              <h4>Amount of time remaining:{this.state.timer}</h4>
-              <button onClick={() => calculateWordCount(text)} >Start Game</button>
-              <h1>Word Count:{this.wordsArr}</h1>
+              <h4>Amount of time remaining:{timeRemaining}</h4>
+              <button onClick={() => setIsTimeRunning(true)} >Start Game</button>
+              <h1>Word Count:</h1>
       </form>
+      </>
     )
   }
   
-}
+
 
 export default App
