@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App'
 
 function App(){
@@ -10,6 +10,7 @@ function App(){
   const [timeRemaining, setTimeRemaining] = useState(STARTING_TIME)
   const [isTimeRunning, setIsTimeRunning] = useState(false)
   const [wordCount, setWordCount] = useState(0)
+  const textBoxRef = useRef(null) //to enable focus of textarea so that type after start button is clicked
   
 
   function handleChange(e){
@@ -26,6 +27,8 @@ function App(){
     setIsTimeRunning(true)
     setTimeRemaining(STARTING_TIME)
     setText('')
+    textBoxRef.current.disabled = false
+    textBoxRef.current.focus()
   }
 
   function endGame(){
@@ -48,11 +51,18 @@ const start = isTimeRunning ? "re-START" : "START"
       <>
       <div className="App">
               <h1>How fast do you type?</h1>
-              <textarea value={text} onChange={handleChange} disabled={!isTimeRunning}/>
+
+              <textarea ref={textBoxRef}
+                       value={text} 
+                       onChange={handleChange} 
+                       disabled={!isTimeRunning}
+                       />
+                       
               <button 
                 onClick={resetGame} 
                 disabled={isTimeRunning}
               >{start}</button>
+
               <h4>Amount of time remaining:{timeRemaining}</h4>
               <h1>Word Count:{wordCount}</h1>
       </div>
